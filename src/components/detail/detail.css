@@ -5,7 +5,7 @@
         flex-direction: column;
         display: flex;
         align-items: center;
-        gap: 20px;
+        gap: 15px;
         border-bottom: 1px solid #dddddd35;
 
         img{
@@ -20,7 +20,7 @@
         padding: 20px;
         display: flex;
         flex-direction: column;
-        gap: 30px;
+        gap: 20px;
 
         .option{
 
@@ -78,7 +78,7 @@
             
         }
         button{
-            padding: 10px 20px;
+            padding: 10px;
             background-color: rgb(230, 102, 102);
             color: white;
             border: none;
@@ -87,6 +87,10 @@
 
             &:hover{
                 background-color: rgb(239, 29, 29);
+            }
+            &.logOut{
+                padding: 10px;
+                background-color: #1a73e8;
             }
         }
     }

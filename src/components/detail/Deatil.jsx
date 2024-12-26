@@ -47,6 +47,7 @@ const Deatil = () => {
           </div>
         </div>
         <button>Block user</button>
+        <button className='logOut'>Logout</button>
       </div>
       
       </div>
