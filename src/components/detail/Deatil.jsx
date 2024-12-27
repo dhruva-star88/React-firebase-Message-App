@@ -1,5 +1,6 @@
 import React from 'react'
 import "./detail.css"
+import { auth } from '../../lib/firebase'
 
 const Deatil = () => {
   return (
@@ -47,7 +48,7 @@ const Deatil = () => {
           </div>
         </div>
         <button>Block user</button>
-        <button className='logOut'>Logout</button>
+        <button className='logOut' onClick={() => auth.signOut()}>Logout</button>
       </div>
       
       </div>

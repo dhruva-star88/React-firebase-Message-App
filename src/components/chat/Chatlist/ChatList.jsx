@@ -1,10 +1,42 @@
 import React from 'react'
 import "./chatlist.css"
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import AddUser from './addUser/AddUser'
+import { doc, onSnapshot } from "firebase/firestore";
+import useUserStore from '../../../lib/userStore';
+import { db } from '../../../lib/firebase';
 
 const ChatList = () => {
+    const [chats, setChats] = useState([])
     const[addMode, setAddMode] = useState(false)
+    const{currentUser} = useUserStore()
+
+    useEffect(() => {
+        const unSub = onSnapshot(doc(db, "userchats", currentUser.id), 
+        { includeMetadataChanges: true }, 
+        async(res) => {
+            const items = res.data().chats
+
+            const promises = items.map(async (item) => {
+                const userDocRef = doc(db, "users", item.receiverId);
+                const userDocSnap = await getDoc(userDocRef);
+
+                const user = userDocSnap.data()
+
+                return {...item, user}
+            })
+              const chatData = await Promise.all(promises)
+
+              setChats(chatData.sort((a, b ) => b.updatedAt - a.updatedAt))
+            }
+        );
+
+            return () => {
+                unSub()
+            }
+    }, [currentUser.id])
+
+    
   return (
     <div className='chatlist'>
         <div className="search">
@@ -15,27 +47,15 @@ const ChatList = () => {
             <img src={addMode ? './minus.png': './plus.png' }alt='' className='add'
             onClick={() => setAddMode((prev) => !prev)}></img>  
         </div>
-        <div className="item">
-        <img src='./avatar.png' alt=''></img>
-        <div className="texts">
-            <span>Dhruva</span>
-            <p>Hello</p>
-        </div>
-        </div>
-        <div className="item">
-        <img src='./avatar.png' alt=''></img>
-        <div className="texts">
-            <span>Dhruva</span>
-            <p>Hello</p>
-        </div>
-        </div>
-        <div className="item">
-        <img src='./avatar.png' alt=''></img>
-        <div className="texts">
-            <span>Dhruva</span>
-            <p>Hello</p>
-        </div>
-        </div>
+        {chats.map((chat)=> (
+            <div className="item" key={chat.chatId}>
+            <img src='./avatar.png' alt=''></img>
+            <div className="texts">
+                <span>Dhruva</span>
+                <p>Hello</p>
+            </div>
+            </div>
+        ))}
         {addMode && <AddUser />}
     </div>
   )
